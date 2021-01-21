@@ -40,16 +40,16 @@
     "Expression": "not IsHidden and Measures.Count(not IsHidden and string.IsNullOrEmpty(DisplayFolder)) > 1",
     "CompatibilityLevel": 1200
   },
-  {
+ {
     "ID": "LAYOUT_HIDE_FK_COLUMNS",
     "Name": "Hide foreign key columns",
     "Category": "Model Layout",
     "Description": "Columns used on the Many side of a relationship should be hidden, as the related (dimension) table is likely the best place to apply a filter context.",
     "Severity": 1,
-    "Scope": "DataColumn, CalculatedColumn, CalculatedTableColumn",
-    "Expression": "Model.Relationships.Any(FromColumn = outerIt) and not IsHidden and not Table.IsHidden",
+    "Scope": "DataColumn",
+    "Expression": "Model.Relationships.Any(Name.EndsWith(\"Key\")) and not IsHidden and not Table.IsHidden",
     "FixExpression": "IsHidden = true",
-    "CompatibilityLevel": 0
+    "CompatibilityLevel": 1200
   },
   {
     "ID": "DISABLE_AUTO_TIME_INTELLIGENCE",
