@@ -47,7 +47,7 @@
     "Description": "Columns used on the Many side of a relationship should be hidden, as the related (dimension) table is likely the best place to apply a filter context.",
     "Severity": 1,
     "Scope": "DataColumn",
-    "Expression": "Model.Relationships.Any(Name.EndsWith(\"Key\")) and not IsHidden and not Table.IsHidden",
+    "Expression": "Model.Relationships.Any(Name.EndsWith(\"Key\")) OR Model.Relationships.Any(Name.EndsWith(\"KEY\")) and not IsHidden and not Table.IsHidden",
     "FixExpression": "IsHidden = true",
     "CompatibilityLevel": 1200
   },
