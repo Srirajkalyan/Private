@@ -1,0 +1,64 @@
+[
+  {
+    "ID": "APPLY_FORMAT_STRING_MEASURES",
+    "Name": "Provide format string for all visible measures",
+    "Category": "Formatting",
+    "Description": "Visible measures should have their Format String property assigned",
+    "Severity": 3,
+    "Scope": "Measure, DataColumn, CalculatedColumn",
+    "Expression": "not IsHidden \nand string.IsNullOrWhitespace(FormatString)",
+    "CompatibilityLevel": 1200
+  },
+  {
+    "ID": "META_SUMMARIZE_NONE",
+    "Name": "Don't summarize numeric columns",
+    "Category": "Metadata",
+    "Description": "Set the SummarizeBy property of all visible numeric columns to \"None\", to avoid unintentional summarization in client tools. Create measures for columns that are supposed to be summarized.",
+    "Severity": 1,
+    "Scope": "DataColumn, CalculatedColumn, CalculatedTableColumn",
+    "Expression": "IsHidden = false and Table.IsHidden = false and SummarizeBy <> \"None\" and (DataType = \"Double\" or DataType = \"Decimal\" or DataType = \"Int64\")",
+    "FixExpression": "SummarizeBy = AggregateFunction.None",
+    "CompatibilityLevel": 0
+  },
+  {
+    "ID": "LAYOUT_COLUMNS_HIERARCHIES_DF",
+    "Name": "Organize columns and hierarchies in display folders",
+    "Category": "Model Layout",
+    "Description": "Tables with more than 10 visible columns and/or hierarchies should have them organized in display folders for improved usability.",
+    "Severity": 1,
+    "Scope": "Table",
+    "Expression": "not IsHidden and \n   (Columns.Count(not IsHidden and string.IsNullOrEmpty(DisplayFolder)) +\n    Hierarchies.Count(not IsHidden and string.IsNullOrEmpty(DisplayFolder))\n) > 1",
+    "CompatibilityLevel": 1200
+  },
+  {
+    "ID": "LAYOUT_MEASURES_DF",
+    "Name": "Organize measures in display folders",
+    "Category": "Model Layout",
+    "Description": "Tables with more than 10 visible measures should have them organized in display folders for improved usability",
+    "Severity": 1,
+    "Scope": "Table",
+    "Expression": "not IsHidden and Measures.Count(not IsHidden and string.IsNullOrEmpty(DisplayFolder)) > 1",
+    "CompatibilityLevel": 1200
+  },
+  {
+    "ID": "LAYOUT_HIDE_FK_COLUMNS",
+    "Name": "Hide foreign key columns",
+    "Category": "Model Layout",
+    "Description": "Columns used on the Many side of a relationship should be hidden, as the related (dimension) table is likely the best place to apply a filter context.",
+    "Severity": 1,
+    "Scope": "DataColumn, CalculatedColumn, CalculatedTableColumn",
+    "Expression": "Model.Relationships.Any(FromColumn = outerIt) and not IsHidden and not Table.IsHidden",
+    "FixExpression": "IsHidden = true",
+    "CompatibilityLevel": 0
+  },
+  {
+    "ID": "DISABLE_AUTO_TIME_INTELLIGENCE",
+    "Name": "Disable auto time intelligence",
+    "Category": "Performance",
+    "Description": "Navigate to Power BI Desktop current file properties and disable the setting Auto date/time in Data Load. Note: To disable for all new files created in Power BI Desktop disbale the setting Auto date/time for new files in the Global settings Data Load.",
+    "Severity": 1,
+    "Scope": "Model",
+    "Expression": "Tables.Any(Name.StartsWith(\"LocalDateTable_\")) ",
+    "CompatibilityLevel": 1200
+  }
+]
