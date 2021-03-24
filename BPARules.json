@@ -60,5 +60,36 @@
     "Scope": "Model",
     "Expression": "Tables.Any(Name.StartsWith(\"LocalDateTable_\")) ",
     "CompatibilityLevel": 1200
+  },
+  {
+    "ID": "PERF_UNUSED_COLUMNS",
+    "Name": "Hide used columns in Measures",
+    "Category": "Performance",
+    "Description": " columns, which do not have any dependencies, are  used in any relationships, not used in any hierarchies and not used as the SortByColumn for other columns and used in Measures, will likely not be used by clients and thus take up unnecessary space. Consider removing the columns from the model to save space and improve processing time.",
+    "Severity": 2,
+    "Scope": "DataColumn, CalculatedColumn, CalculatedTableColumn",
+    "Expression": "IsVisible\n\nand ReferencedBy.Count = 1 \n\nand (UsedInRelationships.Any())\n\nand (UsedInSortBy.Any())\n\nand (UsedInHierarchies.Any())\n\nand (UsedInVariations.Any())\nand ReferencedBy.AllMeasures.Any()\n\n",
+    "FixExpression": "IsHidden = true",
+    "CompatibilityLevel": 1200
+  },
+  {
+    "ID": "DAX_COLUMNS_FULLY_QUALIFIED",
+    "Name": "Column references should be fully qualified",
+    "Category": "DAX Expressions",
+    "Description": "Using fully qualified column references makes it easier to distinguish between column and measure references, and also helps avoid certain errors.",
+    "Severity": 2,
+    "Scope": "Measure, CalculatedColumn, CalculatedTable, KPI",
+    "Expression": "DependsOn.Any(Key.ObjectType = \"Column\" and Value.Any(not FullyQualified))",
+    "CompatibilityLevel": 1200
+  },
+  {
+    "ID": "DAX_MEASURES_UNQUALIFIED",
+    "Name": "Measure references should be unqualified",
+    "Category": "DAX Expressions",
+    "Description": "Using unqualified measure references makes it easier to distinguish between column and measure references, and also helps avoid certain errors.",
+    "Severity": 2,
+    "Scope": "Measure, CalculatedColumn, CalculatedTable, KPI",
+    "Expression": "DependsOn.Any(Key.ObjectType = \"Measure\" and Value.Any(FullyQualified))",
+    "CompatibilityLevel": 1200
   }
 ]
